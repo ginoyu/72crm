@@ -29,9 +29,9 @@ class Log extends Common
      * @param     [number]                   $page     [当前页数]
      * @param     [number]                   $limit    [每页数量]
      * @return    [array]                    [description]
-     */		
+     */
 	public function getDataList($request)
-    {  	
+    {
     	$userModel = new \app\admin\model\User();
 		$structureModel = new \app\admin\model\Structure();
 		$fileModel = new \app\admin\model\File();
@@ -43,7 +43,7 @@ class Log extends Common
 		$recordModel = new \app\admin\model\Record();
 
 		$user_id = $request['read_user_id'];
-    	$by = $request['by'] ? : ''; 
+    	$by = $request['by'] ? : '';
 		$unfieldAry = ['by','search','user_id','read_user_id'];
 		foreach($unfieldAry as $value){
 			unset($request[$value]);
@@ -66,38 +66,38 @@ class Log extends Common
 	        	$map['log.create_user_id'] = $request['send_user_id'];
 	        } else {
 				$dataWhere['user_id'] = $user_id;
-		        $dataWhere['structure_id'] = $request['structure_id']; 
-		        $dataWhere['auth_user_ids'] = $auth_user_ids; 
-		        $logMap = '';    
+		        $dataWhere['structure_id'] = $request['structure_id'];
+		        $dataWhere['auth_user_ids'] = $auth_user_ids;
+		        $logMap = '';
 				switch ($by) {
-					case 'me' : 
+					case 'me' :
 						$map['log.create_user_id'] = $user_id;
 						break;
 					case 'other':
 						$logMap = function($query) use ($dataWhere){
 			                    $query->where('log.send_user_ids',array('like','%,'.$dataWhere['user_id'].',%'))
 			                        ->whereOr('log.send_structure_ids',array('like','%,'.$dataWhere['structure_id'].',%'));
-			            }; 
+			            };
 						break;
-					case 'notRead' : 
-						$map['log.read_user_ids'] = ['not like','%,'.$user_id.',%']; 
+					case 'notRead' :
+						$map['log.read_user_ids'] = ['not like','%,'.$user_id.',%'];
 						$logMap = function($query) use ($dataWhere){
 			                    $query->where('log.create_user_id',array('in',implode(',', $dataWhere['auth_user_ids'])))
 			                    	->whereOr('log.send_user_ids',array('like','%,'.$dataWhere['user_id'].',%'))
 			                        ->whereOr('log.send_structure_ids',array('like','%,'.$dataWhere['structure_id'].',%'));
-			            };				
+			            };
 						break;
-					default : 
+					default :
 						$logMap = function($query) use ($dataWhere){
 			                    $query->where('log.create_user_id',array('in',implode(',', $dataWhere['auth_user_ids'])))
 			                    	->whereOr('log.send_user_ids',array('like','%,'.$dataWhere['user_id'].',%'))
 			                        ->whereOr('log.send_structure_ids',array('like','%,'.$dataWhere['structure_id'].',%'));
-			            };					
+			            };
 						break;
-				}        	
-	        }        	
+				}
+	        }
         }
-        		
+        
 		$list = Db::name('OaLog')
 				->where($map)
 				->where($logMap)
@@ -118,7 +118,7 @@ class Log extends Common
 			$imgList = [];
 			$where = [];
 			$where['module'] = 'oa_log';
-			$where['module_id'] = $v['log_id'];			
+			$where['module_id'] = $v['log_id'];
 			$newFileList = [];
 			$newFileList = $fileModel->getDataList($where);
 			foreach ($newFileList['list'] as $val) {
@@ -129,7 +129,7 @@ class Log extends Common
 				}
 			}
 			$list[$k]['fileList'] = $fileList ? : [];
-			$list[$k]['imgList'] = $imgList ? : [];	
+			$list[$k]['imgList'] = $imgList ? : [];
 			$list[$k]['sendUserList'] = $userModel->getDataByStr($v['send_user_ids']) ? : [];
 			$list[$k]['sendStructList'] = $structureModel->getDataByStr($v['send_structure_ids']) ? : [];
 			$param['type_id'] = $v['log_id'];
@@ -147,7 +147,7 @@ class Log extends Common
 			//3天内的日志可删,可修改
 			if (($v['create_user_id'] == $user_id) && date('Ymd',$v['create_time']) > date('Ymd',(strtotime(date('Ymd',time()))-86400*3))) {
 				$is_update = 1;
-				$is_delete = 1;			
+				$is_delete = 1;
 			}
 			if (in_array($v['create_user_id'],$auth_user_ids)) {
 				$is_delete = 1;
@@ -216,7 +216,7 @@ class Log extends Common
 			if (count($fileArr)) {
 				$fileList = Db::name('AdminFile')->where('file_id in ('.implode(',',$fileArr).')')->select();
 				foreach ($fileList as $k=>$v) {
-					$fileList[$k4]['file_path'] = $v['file_path'] ? getFullPath($v['file_path']) : '';
+					$fileList[$k]['file_path'] = $v['file_path'] ? getFullPath($v['file_path']) : '';
 				}
 			}
 			$data['fileList'] = $fileList ? : array();
@@ -242,15 +242,15 @@ class Log extends Common
 		} else {
 			$this->error = '添加失败';
 			return false;
-		}		
+		}
 	}
 
 	/**
 	 * 编辑日志信息
 	 * @author Michael_xu
-	 * @param  
-	 * @return                            
-	 */	
+	 * @param
+	 * @return
+	 */
 	public function updateDataById($param, $log_id = '')
 	{
 		$dataInfo = $this->getDataById($log_id);
@@ -293,7 +293,7 @@ class Log extends Common
 		        	$this->error = '附件上传失败';
 		        	return false;
 		        }
-	        }			
+	        }
 			$data = [];
 			$data['log_id'] = $log_id;
 			Db::name('OaLogRelation')->where('log_id = '.$log_id)->update($rdata);
@@ -302,19 +302,19 @@ class Log extends Common
 		} else {
 			$this->error = '编辑失败';
 			return false;
-		}					
+		}
 	}
 
 	/**
      * 日志数据
      * @param  $id 日志ID
-     * @return 
-     */	
+     * @return
+     */
    	public function getDataById($id = '')
-   	{   
+   	{
 		$fileModel = new \app\admin\model\File();
 		$userModel = new \app\admin\model\User();
-		$structureModel = new \app\admin\model\Structure();	
+		$structureModel = new \app\admin\model\Structure();
 		$commonModel = new \app\admin\model\Comment();
 
    		$map['log.log_id'] = $id;
@@ -353,7 +353,7 @@ class Log extends Common
 			}
 		}
 		$dataInfo['fileList'] = $fileList ? : [];
-		$dataInfo['imgList'] = $imgList ? : [];	
+		$dataInfo['imgList'] = $imgList ? : [];
 		$dataInfo['sendUserList'] = $userModel->getDataByStr($dataInfo['send_user_ids']) ? : [];
 		$dataInfo['sendStructList'] = $structureModel->getDataByStr($dataInfo['send_structure_ids']) ? : [];
 		$param['type_id'] = $id;
@@ -365,7 +365,7 @@ class Log extends Common
 	/**
      * 日志删除
      * @param  log_id 日志ID
-     * @return 
+     * @return
      */
 	public function delDataById($param)
 	{
@@ -383,5 +383,5 @@ class Log extends Common
 			$this->error = '操作失败';
 			return false;
 		}
-	}	
+	}
 }

@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Description: 商业智能-回款分析
 // +----------------------------------------------------------------------
-// | Author: Michael_xu | gengxiaoxu@5kcrm.com 
+// | Author: Michael_xu | gengxiaoxu@5kcrm.com
 // +----------------------------------------------------------------------
 
 namespace app\bi\controller;
@@ -18,24 +18,24 @@ class Receivables extends ApiCommon
      * @permission 无限制
      * @allow 登录用户可访问
      * @other 其他根据系统设置
-    **/    
+    **/
     public function _initialize()
     {
         $action = [
             'permission'=>[''],
-            'allow'=>['statistics','statisticlist']            
+            'allow'=>['statistics','statisticlist']
         ];
         Hook::listen('check_auth',$action);
         $request = Request::instance();
-        $a = strtolower($request->action());        
+        $a = strtolower($request->action());
         if (!in_array($a, $action['permission'])) {
             parent::_initialize();
         }
         if (!checkPerByAction('bi', 'receivables' , 'read')) {
             header('Content-Type:application/json; charset=utf-8');
             exit(json_encode(['code'=>102,'error'=>'无权操作']));
-        }         
-    } 
+        }
+    }
   
     //回款统计列表
     public function statisticList()
@@ -53,14 +53,14 @@ class Receivables extends ApiCommon
      * @return
      */
     public function statistics()
-    {        
+    {
         $receivablesModel = new \app\crm\model\Receivables();
         $userModel = new \app\admin\model\User();
         $param = $this->param;
-        $adminModel = new \app\admin\model\Admin(); 
+        $adminModel = new \app\admin\model\Admin();
         $perUserIds = $userModel->getUserByPer('bi', 'receivables', 'read'); //权限范围内userIds
         $whereData = $adminModel->getWhere($param, '', $perUserIds); //统计条件
-        $userIds = $whereData['userIds'];       
+        $userIds = $whereData['userIds'];
 
         $year = $param['year'];
         //时间段
@@ -69,7 +69,7 @@ class Receivables extends ApiCommon
             $days = getmonthdays(strtotime($param['month']));
             //获取时间范围内的每日时间戳数组(当月)
             $start = strtotime($param['month'].'-'.'01');
-            $end = (strtotime($param['month'].'-'.$days) > time()) ? time() : strtotime($date.'-'.$days);
+            $end = (strtotime($param['month'].'-'.$days) > time()) ? time() : strtotime($param['month'].'-'.$days);
             $create_time = array($start,$end);
         } elseif ($param['year']) {
             $next_year = $param['year']+1;
@@ -78,9 +78,9 @@ class Receivables extends ApiCommon
             $create_time = getTimeByType('year');
         }
         unset($param['month']);
-        unset($param['year']); 
+        unset($param['year']);
         $param['create_time']['start'] = $create_time[0];
-        $param['create_time']['end'] = $create_time[1];     
+        $param['create_time']['end'] = $create_time[1];
         $chartParam = $param;
         $chartParam['year'] = $year;
         $chartParam['userIds'] = $userIds ? : [];

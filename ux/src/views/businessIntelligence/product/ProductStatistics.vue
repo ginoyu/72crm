@@ -46,6 +46,7 @@ import ContractDetail from '@/views/customermanagement/contract/ContractDetail'
 import CustomerDetail from '@/views/customermanagement/customer/CustomerDetail'
 import ProductDetail from '@/views/customermanagement/product/ProductDetail'
 import base from '../mixins/base'
+import { floatToFixed } from '../../../utils/types'
 
 function fieldFormatter(info) {
   if (info) {
@@ -77,7 +78,7 @@ export default {
         { field: 'customer_id', name: '客户名称', width: '115px' },
         { field: 'sales_price', name: '销售单价', width: '115px' },
         { field: 'num', name: '数量', width: '115px' },
-        { field: 'subtotal', name: '订单产品小计', width: '115px' }
+        { field: 'subtotal', name: '订单金额小计', width: '115px' }
       ],
       list: [],
       //
@@ -227,7 +228,7 @@ export default {
       var count
       for (let index = 0; index < this.list.length; index++) {
         const element = this.list[index]
-
+        element.subtotal = floatToFixed(element.subtotal)
         if (spanList.length == 0) {
           seriesIndex = 0 //一个新系列的开始
           productIndex = 0 //一个新产品的开始
@@ -243,10 +244,10 @@ export default {
           /** 上一个最后产品的处理 */
           var preItem = spanList[seriesIndex]
           preItem.rowspan += 1
-          newList.push({ num: subCount, subtotal: subMoney }) // 产品小计数据
+          newList.push({ num: subCount, subtotal: floatToFixed(subMoney) }) // 产品小计数据
           spanList.push({ rowspan: 0, product_rowspan: 1, isSum: true }) // 产品小计style
 
-          newList.push({ num: allCount, subtotal: allMoney }) // 系列小计数据
+          newList.push({ num: allCount, subtotal: floatToFixed(allMoney) }) // 系列小计数据
           spanList.push({ rowspan: 1, product_rowspan: 1, isAllSum: true }) // 系列小计style
 
           /*** 新系列开始 */
@@ -276,12 +277,12 @@ export default {
             // 需要添加一个小计
             preItem.rowspan += 1
 
-            newList.push({ num: subCount, subtotal: subMoney }) // 产品小计数据
+            newList.push({ num: subCount, subtotal: floatToFixed(subMoney) }) // 产品小计数据
             spanList.push({ rowspan: 0, product_rowspan: 1, isSum: true }) // 产品小计Style
 
             spanList.push({ rowspan: 0, product_rowspan: 1 }) // 新产品 第一条数据style
             productIndex = spanList.length - 1 //一个新产品的开始=
-            subCount = element.num
+            subCount = parseInt(element.num)
             subMoney = parseFloat(element.subtotal) //开始了一个新的产品  所以没有 清空数据
             allCount += parseFloat(element.num) // 系列 继续 叠加
             allMoney += parseFloat(element.subtotal)
@@ -293,12 +294,12 @@ export default {
           // 最后一个产品的处理
           var preItem = spanList[seriesIndex]
           preItem.rowspan += 1
-          newList.push({ num: subCount, subtotal: subMoney }) // 产品小计数据
+          newList.push({ num: subCount, subtotal: floatToFixed(subMoney) }) // 产品小计数据
           subCount = 0
           subMoney = 0 // 完成一个产品统计 清空数据
           spanList.push({ rowspan: 0, product_rowspan: 1, isSum: true }) // 产品小计style
 
-          newList.push({ num: allCount, subtotal: allMoney }) // 系列小计数据
+          newList.push({ num: allCount, subtotal: floatToFixed(allMoney) }) // 系列小计数据
           allCount = 0
           allMoney = 0 // 完成一个系列统计 清空数据
           spanList.push({ rowspan: 1, product_rowspan: 1, isAllSum: true }) // 系列小计style

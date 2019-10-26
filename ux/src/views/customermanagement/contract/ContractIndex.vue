@@ -88,7 +88,7 @@
                        :page-size.sync="pageSize"
                        layout="slot, total, sizes, prev, pager, next, jumper"
                        :total="total">
-          <span class="money-bar">合同总金额：{{moneyPageData.sumMoney}} / 已回款金额：{{moneyPageData.unReceivablesMoney}}</span>
+          <span class="money-bar">合同总金额：{{moneyPageData.sumMoney}} / 未回款金额：{{moneyPageData.unReceivablesMoney}}</span>
         </el-pagination>
       </div>
     </div>

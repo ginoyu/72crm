@@ -1,4 +1,4 @@
-ALTER TABLE `5kcrm_admin_user_threeparty` 
+ALTER TABLE `5kcrm_admin_user_threeparty`
 CHANGE COLUMN `ding_id` `key` varchar(100) NOT NULL COMMENT '关联模块' AFTER `user_id`,
 ADD COLUMN `value` varchar(512) NOT NULL DEFAULT '' COMMENT '关联内容' AFTER `key`;
 
@@ -100,8 +100,8 @@ INSERT INTO `5kcrm_admin_rule`(`id`, `types`, `title`, `name`, `level`, `pid`, `
 
 ALTER TABLE `5kcrm_task` CHANGE `name` `name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '任务名称';
 
-INSERT INTO `5kcrm_admin_rule` (144, `types`, `title`, `name`, `level`, `pid`, `status`) VALUES ( '2', '跟进记录管理', 'record', '2', '1', '1');
-INSERT INTO `5kcrm_admin_rule` (145, `types`, `title`, `name`, `level`, `pid`, `status`) VALUES ( '2', '查看列表', 'index', '3', '144', '1');
+INSERT INTO `5kcrm_admin_rule` (id, `types`, `title`, `name`, `level`, `pid`, `status`) VALUES (144, '2', '跟进记录管理', 'record', '2', '1', '1');
+INSERT INTO `5kcrm_admin_rule` (id, `types`, `title`, `name`, `level`, `pid`, `status`) VALUES (145, '2', '查看列表', 'index', '3', '144', '1');
 
 INSERT INTO `5kcrm_admin_config` (`id`, `name`, `status`, `module`, `controller`, `type`, `pid`) VALUES
 (1, '办公管理', 1, 'oa', '', 1, 0),

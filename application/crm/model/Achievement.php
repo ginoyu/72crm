@@ -24,7 +24,7 @@ class Achievement extends Common
 
 	//[getDataList 考核信息list] 部门
 	public function getDataList($request)
-    {  	
+    {
     	$userModel = new \app\admin\model\User();
  		if ($request['year']) {
  			$map['year'] = $request['year'];
@@ -238,12 +238,12 @@ class Achievement extends Common
 	/**
 	 * 创建对象考核信息
 	 * @author yykun
-	 * @param  
-	 * @return                            
-	 */	
+	 * @param
+	 * @return
+	 */
 	public function createData($param)
 	{
-		if ( isset($param['ids']) ) { //多个部门同时添加 
+		if ( isset($param['ids']) ) { //多个部门同时添加
             $temp = $param['ids'];
             unset($param['ids']);
             $param['type'] = 2;
@@ -251,14 +251,14 @@ class Achievement extends Common
                 $data['type'] = 2;
                 $data['obj_id'] = $value;
                 $flag = $this->where($data)->find();
-                if ($flag) { //已存在的更新 
+                if ($flag) { //已存在的更新
                     $this->where('achievement_id ='.$flag['achievement_id'])->update($param);
                 } else { //不存在的添加
                     $param['obj'] = $value;
                     $this->insert($param);
                 }
             }
-        }	
+        }
         if ( isset($param['user_ids']) ) {
             $param['type'] = 3;
             $temp_user_ids = $param['user_ids'];
@@ -275,15 +275,15 @@ class Achievement extends Common
                 }
             }
         }
-        return true;		
+        return true;
 	}
 
 	/**
 	 * 编辑信息
 	 * @author yykun
-	 * @param  
-	 * @return                            
-	 */	
+	 * @param
+	 * @return
+	 */
 	public function updateData($param)
 	{
 		$fileary = ['first','second','third','fourth'];
@@ -295,16 +295,16 @@ class Achievement extends Common
 				$this->where('achievement_id = '.$v['achievement_id'].'')->update($v);
 			}
 		}
-		return true;					
+		return true;
 	}
 
 	/**
      * 详情
-     * @param  $id 
-     * @return 
-     */	
+     * @param  $id
+     * @return
+     */
    	public function getDataById($id = '')
-   	{   		
+   	{
    		$map['achievement_id'] = $id;
 		$dataInfo = Db::name('CrmAchievement')->where($map)->find();
 		if (!$dataInfo) {
@@ -318,13 +318,13 @@ class Achievement extends Common
     	}
 
     	if ($dataInfo['type']=='2') {
-    		$det = Db::name('AdminStructure')->where('id ='.$v['obj_id'])->find();
+    		$det = Db::name('AdminStructure')->where('id ='.$dataInfo['obj_id'])->find();
     		$dataInfo['name'] = $det['name'];
     	}
 
     	if ($dataInfo['type']=='3') {
     		$dataInfo['name'] = '公司';
-    	} 	
+    	}
 		return $dataInfo;
    	}
 }

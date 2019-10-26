@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Description: 商业智能-客户分析
 // +----------------------------------------------------------------------
-// | Author: Michael_xu | gengxiaoxu@5kcrm.com 
+// | Author: Michael_xu | gengxiaoxu@5kcrm.com
 // +----------------------------------------------------------------------
 
 namespace app\bi\controller;
@@ -19,33 +19,33 @@ class Customer extends ApiCommon
      * @permission 无限制
      * @allow 登录用户可访问
      * @other 其他根据系统设置
-    **/    
+    **/
     public function _initialize()
     {
         $action = [
             'permission'=>[''],
-            'allow'=>['statistics','total','recordtimes','recordlist','recordmode','conversion','conversioninfo','pool','poollist','usercycle','productcycle','addresscycle','addressanalyse','portrait']            
+            'allow'=>['statistics','total','recordtimes','recordlist','recordmode','conversion','conversioninfo','pool','poollist','usercycle','productcycle','addresscycle','addressanalyse','portrait']
         ];
         Hook::listen('check_auth',$action);
         $request = Request::instance();
-        $a = strtolower($request->action());        
+        $a = strtolower($request->action());
         if (!in_array($a, $action['permission'])) {
             parent::_initialize();
         }
         if (!checkPerByAction('bi', 'customer' , 'read')) {
             header('Content-Type:application/json; charset=utf-8');
             exit(json_encode(['code'=>102,'error'=>'无权操作']));
-        }        
+        }
     }
 
     /**
      * 员工客户分析
      * @author Michael_xu
-     * @param 
+     * @param
      * @return
      */
     public function statistics()
-    {        
+    {
         $customerModel = new \app\crm\model\Customer();
         $param = $this->param;
         if ($param['type']) {
@@ -60,7 +60,7 @@ class Customer extends ApiCommon
     /**
      * 员工客户总量分析
      * @author zhi
-     * @param 
+     * @param
      * @return
      */
     public function total()
@@ -68,7 +68,7 @@ class Customer extends ApiCommon
         $customerModel = new \app\crm\model\Customer();
         $userModel = new \app\admin\model\User();
         $biCustomerModel = new \app\bi\model\Customer();
-        $adminModel = new \app\admin\model\Admin(); 
+        $adminModel = new \app\admin\model\Admin();
         $param = $this->param;
         $perUserIds = $userModel->getUserByPer('bi', 'customer', 'read'); //权限范围内userIds
         $whereArr = $adminModel->getWhere($param, '', $perUserIds); //统计条件
@@ -80,7 +80,7 @@ class Customer extends ApiCommon
 
         $company = $biCustomerModel->getParamByCompany($param);
         $datas = array();
-        for ($i=1; $i <= $company['j']; $i++) { 
+        for ($i=1; $i <= $company['j']; $i++) {
             $whereArr = [];
             $whereArr['create_user_id'] = array('in',$userIds);
             $item = array();
@@ -109,7 +109,7 @@ class Customer extends ApiCommon
     /**
      * 员工客户跟进次数分析
      * @author zhi
-     * @param 
+     * @param
      * @return
      */
     public function recordTimes()
@@ -117,7 +117,7 @@ class Customer extends ApiCommon
         $biCustomerModel = new \app\bi\model\Customer();
         $biRecordModel = new \app\bi\model\Record();
         $userModel = new \app\admin\model\User();
-        $adminModel = new \app\admin\model\Admin(); 
+        $adminModel = new \app\admin\model\Admin();
         $param = $this->param;
         $perUserIds = $userModel->getUserByPer('bi', 'customer', 'read'); //权限范围内userIds
         $whereArr = $adminModel->getWhere($param, '', $perUserIds); //统计条件
@@ -129,7 +129,7 @@ class Customer extends ApiCommon
         
         $company = $biCustomerModel->getParamByCompany($param);
         $datas = array();
-        for ($i=1; $i <= $company['j']; $i++) { 
+        for ($i=1; $i <= $company['j']; $i++) {
             $whereArr = [];
             $whereArr['create_user_id'] = array('in',$userIds);
             $item = array();
@@ -159,7 +159,7 @@ class Customer extends ApiCommon
     /**
      * 员工客户跟进次数分析 具体员工列表
      * @author zhi
-     * @param 
+     * @param
      * @return
      */
     public function recordList()
@@ -170,7 +170,7 @@ class Customer extends ApiCommon
             $timeArr = getTimeByType($param['type']);
             $param['start_time'] = $timeArr[0];
             $param['end_time'] = $timeArr[1];
-        }        
+        }
         $list = $biRecordModel->getDataList($param);
         return resultArray(['data' => $list]);
     }
@@ -178,7 +178,7 @@ class Customer extends ApiCommon
     /**
      * 员工跟进方式分析
      * @author zhi
-     * @param 
+     * @param
      * @return
      */
     public function recordMode()
@@ -191,7 +191,7 @@ class Customer extends ApiCommon
         //跟进类型
         $record_type = db('crm_config')->where(['name' => 'record_type'])->find();
         if ($record_type) {
-            $record_categorys = json_decode($record_type['value']);        
+            $record_categorys = json_decode($record_type['value']);
         } else {
             $record_categorys = array('打电话','发邮件','发短信','见面拜访','活动');
         }
@@ -216,7 +216,7 @@ class Customer extends ApiCommon
     /**
      * 客户转化率分析
      * @author zhi
-     * @param 
+     * @param
      * @return
      */
     public function conversion()
@@ -224,7 +224,7 @@ class Customer extends ApiCommon
         $customerModel = new \app\crm\model\Customer();
         $userModel = new \app\admin\model\User();
         $biCustomerModel = new \app\bi\model\Customer();
-        $adminModel = new \app\admin\model\Admin(); 
+        $adminModel = new \app\admin\model\Admin();
         $param = $this->param;
         $perUserIds = $userModel->getUserByPer('bi', 'customer', 'read'); //权限范围内userIds
         $whereArr = $adminModel->getWhere($param, '', $perUserIds); //统计条件
@@ -236,7 +236,7 @@ class Customer extends ApiCommon
 
         $company = $biCustomerModel->getParamByCompany($param);
         $datas = array();
-        for ($i=1; $i <= $company['j']; $i++) { 
+        for ($i=1; $i <= $company['j']; $i++) {
             $whereArr = [];
             $whereArr['create_user_id'] = array('in',$userIds);
             $item = array();
@@ -270,7 +270,7 @@ class Customer extends ApiCommon
     /**
      * 客户转化率分析具体数据
      * @author zhi
-     * @param 
+     * @param
      * @return
      */
     public function conversionInfo()
@@ -287,7 +287,7 @@ class Customer extends ApiCommon
     /**
      * 公海客户分析
      * @author zhi
-     * @param 
+     * @param
      * @return
      */
     public function pool()
@@ -295,7 +295,7 @@ class Customer extends ApiCommon
         $actionRecordModel = new \app\bi\model\ActionRecord();
         $userModel = new \app\admin\model\User();
         $biCustomerModel = new \app\bi\model\Customer();
-        $adminModel = new \app\admin\model\Admin(); 
+        $adminModel = new \app\admin\model\Admin();
         $param = $this->param;
         $perUserIds = $userModel->getUserByPer('bi', 'customer', 'read'); //权限范围内userIds
         $whereArr = $adminModel->getWhere($param, '', $perUserIds); //统计条件
@@ -307,7 +307,7 @@ class Customer extends ApiCommon
 
         $company = $biCustomerModel->getParamByCompany($param);
         $datas = array();
-        for ($i=1; $i <= $company['j']; $i++) { 
+        for ($i=1; $i <= $company['j']; $i++) {
             $whereArr = [];
             $whereArr['user_id'] = array('in',$userIds);
             $item = array();
@@ -337,7 +337,7 @@ class Customer extends ApiCommon
     /**
      * 公海客户分析 具体列表
      * @author zhi
-     * @param 
+     * @param
      * @return
      */
     public function poolList()
@@ -346,7 +346,7 @@ class Customer extends ApiCommon
         $actionRecordModel = new \app\bi\model\ActionRecord();
         $customerModel = new \app\crm\model\Customer();
         $structureModel = new \app\admin\model\Structure();
-        $adminModel = new \app\admin\model\Admin(); 
+        $adminModel = new \app\admin\model\Admin();
         $param = $this->param;
         $perUserIds = $userModel->getUserByPer('bi', 'customer', 'read'); //权限范围内userIds
         $whereArr = $adminModel->getWhere($param, '', $perUserIds); //统计条件
@@ -376,9 +376,9 @@ class Customer extends ApiCommon
     }
 
     /**
-     * 员工客户成交周期 
+     * 员工客户成交周期
      * @author zhi
-     * @param 
+     * @param
      * @return
      */
     public function userCycle()
@@ -386,7 +386,7 @@ class Customer extends ApiCommon
         $customerModel = new \app\crm\model\Customer();
         $userModel = new \app\admin\model\User();
         $biCustomerModel = new \app\bi\model\Customer();
-        $adminModel = new \app\admin\model\Admin(); 
+        $adminModel = new \app\admin\model\Admin();
         $param = $this->param;
         $perUserIds = $userModel->getUserByPer('bi', 'customer', 'read'); //权限范围内userIds
         $whereData = $adminModel->getWhere($param, '', $perUserIds); //统计条件
@@ -398,7 +398,7 @@ class Customer extends ApiCommon
         }
         $company = $biCustomerModel->getParamByCompany($param);
         $datas = array();
-        for ($i=1; $i <= $company['j']; $i++) { 
+        for ($i=1; $i <= $company['j']; $i++) {
             $whereArr = [];
             $whereArr['owner_user_id'] = array('in',$userIds);
             $item = array();
@@ -443,12 +443,12 @@ class Customer extends ApiCommon
     /**
      * 产品成交周期
      * @author zhi
-     * @param 
+     * @param
      * @return
      */
     public function productCycle()
-    {     
-        $biCustomerModel = new \app\bi\model\Customer(); 
+    {
+        $biCustomerModel = new \app\bi\model\Customer();
         $productModel = new \app\bi\model\Product();
         $param = $this->param;
         $list = $productModel->getDealByProduct($param);
@@ -471,7 +471,7 @@ class Customer extends ApiCommon
     /**
      * 地区成交周期
      * @author zhi
-     * @param 
+     * @param
      * @return
      */
     public function addressCycle()
@@ -527,7 +527,7 @@ class Customer extends ApiCommon
     /**
      * 客户所在城市分析
      * @author zhi
-     * @param 
+     * @param
      * @return
      */
     public function addressAnalyse()
@@ -537,6 +537,7 @@ class Customer extends ApiCommon
         $address_arr = array('北京','上海','天津','广东','浙江','海南','福建','湖南','湖北','重庆','辽宁','吉林','黑龙江','河北','河南','山东','陕西','甘肃','青海','新疆','山西','四川','贵州','安徽','江西','江苏','云南','内蒙古','广西','西藏','宁夏',
         );
         $map_user_ids = [];
+        $param = Request::instance()->param();
         if ($param['user_id']) {
             $map_user_ids = array($param['user_id']);
         } else {
@@ -564,7 +565,7 @@ class Customer extends ApiCommon
     /**
      * 客户行业/级别/来源分析
      * @author zhi
-     * @param 
+     * @param
      * @return
      */
     public function portrait()

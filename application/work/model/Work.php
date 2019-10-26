@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Description: 项目管理
 // +----------------------------------------------------------------------
-// | Author:  Michael_xu | gengxiaoxu@5kcrm.com 
+// | Author:  Michael_xu | gengxiaoxu@5kcrm.com
 // +----------------------------------------------------------------------
 
 namespace app\work\model;
@@ -29,13 +29,13 @@ class Work extends Common
 	/**
      * 列表
      * @author yykun
-     * @param 
+     * @param
      * @return
      */
 	public function getDataList()
 	{
 		$list = $this->where(['status' => 1])->field('work_id,name,status,create_time')->select();
-		return $list ;	
+		return $list ;
 	}
 
 	/**
@@ -50,7 +50,7 @@ class Work extends Common
 		try {
 			$owner_user_id = $param['owner_user_id'] ? : [];
 			$param['owner_user_id'] = $owner_user_id ? arrayToString($owner_user_id) : '';
-			$param['status'] = 1; 
+			$param['status'] = 1;
 			$this->data($param)->allowField(true)->save();
 			$work_id = $this->work_id;
 			$create_time = time();
@@ -81,7 +81,7 @@ class Work extends Common
      * @author yykun
      * @param
      * @return
-     */	
+     */
 	public function updateDataById($param)
 	{
 		$map['work_id'] = $param['work_id'];
@@ -93,14 +93,14 @@ class Work extends Common
 			$ownerData['create_user_id'] = $workInfo['create_user_id'];
 			$ownerData['owner_user_id'] = stringToArray($workInfo['create_user_id']);
 			$ownerData['is_open'] = $param['is_open'] ? : '0';
-			$this->addOwner($ownerData);	
+			$this->addOwner($ownerData);
 		}
 		$resUpdata = $this->where($map)->update($param);
 		if ($resUpdata) {
 			$logmodel = model('WorkLog');
 			$datalog['type'] = 2; //重命名项目
 			$datalog['name'] = $param['name']; //项目名
-			$datalog['create_user_id'] = $param['create_user_id']; 
+			$datalog['create_user_id'] = $param['create_user_id'];
 			$datalog['work_id'] = $param['work_id'];
 			$ret = $logmodel->workLogAdd($datalog);
 			return true;
@@ -125,10 +125,10 @@ class Work extends Common
 		if ($flag) {
 			$logmodel = new \app\work\model\WorkLog();
 			$datalog['status'] = 4; //删除项目
-			$datalog['create_user_id'] = $param['create_user_id']; 
+			$datalog['create_user_id'] = $param['create_user_id'];
 			$datalog['work_id'] = $param['work_id'];
 			$datalog['content'] = '删除了项目';
-			$ret = $logmodel->workLogAdd($datalog); 
+			$ret = $logmodel->workLogAdd($datalog);
 			return true;
 		} else {
 			$this->error = '数据不存在或已被删除';
@@ -141,7 +141,7 @@ class Work extends Common
      * @author yykun
      * @param
      * @return
-     */	
+     */
 	public function archiveData($param)
 	{
 		$map['work_id'] = $param['work_id'];
@@ -164,11 +164,11 @@ class Work extends Common
      * @author yykun
      * @param
      * @return
-     */	
+     */
 	public function archiveList($param)
 	{
         //权限
-        $map = $this->getWorkWhere($param);		
+        $map = $this->getWorkWhere($param);
 		$where['status'] = 0;
 		$where['ishidden'] = 0;
 		$list = $this->where($map)->where($where)->field('work_id,name,color,archive_time')->select();
@@ -180,7 +180,7 @@ class Work extends Common
      * @author yykun
      * @param
      * @return
-     */	
+     */
 	public function arRecover($work_id='')
 	{
 		if (!$work_id) {
@@ -222,7 +222,7 @@ class Work extends Common
 				$new_own_user_id = str_replace($str,',',$value['owner_user_id']);
 				$data['owner_user_id'] = $new_own_user_id;
 			}
-			if ($value['main_user_id'] == $param['create_user_id']) {
+			if ($value['main_user_id'] == $user_id) {
 				$data['main_user_id'] = '';
 			}
 			if ($data) Db::name('Task')->where(['task_id' => $value['task_id']])->update($data);
@@ -235,7 +235,7 @@ class Work extends Common
      * @author yykun
      * @param
      * @return
-     */	
+     */
 	public function addOwner($param)
 	{
 		$workInfo = $this->get($param['work_id']);
@@ -259,7 +259,7 @@ class Work extends Common
 				$group_id = 1;
 			} else {
 				//默认角色
-				$group_id = db('admin_group')->where(['pid' => 5,'system' => 1])->order('id asc')->value('id');				
+				$group_id = db('admin_group')->where(['pid' => 5,'system' => 1])->order('id asc')->value('id');
 			}
 			$data['group_id'] = $group_id;
 			$saveData[] = $data;
@@ -279,7 +279,7 @@ class Work extends Common
      * @author yykun
      * @param
      * @return
-     */	
+     */
 	public function delOwner($param)
 	{
 		$work_id = $param['work_id'];
@@ -290,7 +290,7 @@ class Work extends Common
 		}
 		if ($workUserInfo['types'] == 1) {
 			$this->error = '项目负责人不能删除';
-			return false;			
+			return false;
 		}
 		$res = db('work_user')->where(['id' => $workUserInfo['id']])->delete();
 
@@ -311,9 +311,9 @@ class Work extends Common
      * @author yykun
      * @param
      * @return
-     */	
+     */
 	public function ownerList($param)
-	{	
+	{
 		if ($param['work_id']) {
 			$workInfo = $this->get($param['work_id']);
 			if ($workInfo['is_open'] == 1) {
@@ -328,7 +328,7 @@ class Work extends Common
 					->field('work.*,user.username,user.realname,user.thumb_img')
 					->order('work.types desc,user.id asc')
 					->select();
-			}			
+			}
 		} else {
 			$list = db('admin_user')->where(['status' => 1])->field('username,realname,thumb_img,id')->select();
 		}
@@ -336,17 +336,17 @@ class Work extends Common
 			foreach ($list as $k=>$v) {
 				$list[$k]['thumb_img'] = $v['thumb_img'] ? getFullPath($v['thumb_img']) : '';
 				$list[$k]['id'] = $v['user_id'] ? : $v['id'];
-			}			
+			}
 		}
 		return $list ? : [];
-	}	
+	}
 
 	/**
      * 项目权限判断(成员)
      * @author yykun
      * @param
      * @return
-     */	 
+     */
 	public function checkWork($work_id, $user_id)
 	{
 		$info = $this->get($work_id);
@@ -396,33 +396,33 @@ class Work extends Common
         //创建人有管理权限
 		if ($workInfo['create_user_id'] == $user_id) {
     		return true;
-    	}             
+    	}
         if (empty($workInfo['is_open'])) {
         	//私有项目
         	$groupInfo = db('work_user')->where(['work_id' => $work_id,'user_id' => $user_id])->find();
 			if ($groupInfo['types'] == 1 && $groupInfo['group_id'] == 1) {
 	            return true;
-	        }       
+	        }
 			$checkParam = [];
 	        $checkParam['user_id'] = $user_id;
 	        $checkParam['group_id'] = $groupInfo['group_id'];
 	        if (checkWorkPerByAction($m, $c, $a, $checkParam)) {
 	        	return true;
-	        }	         	
+	        }
         } else {
         	if ($m == 'work' && $c == 'work' && $a == 'update') {
-	        	return false;        		
+	        	return false;
         	}
         	return true;
         }
         return false;
-	}	
+	}
 
 	/**
      * 获取项目权限范围
      * @author Michael_xu
      * @return
-     */	
+     */
     public function getWorkWhere($param)
     {
     	$user_id = $param['user_id'];
@@ -441,14 +441,14 @@ class Work extends Common
 	            });
 	        };
 	    }
-	    return $map ? : [];    	
+	    return $map ? : [];
     }
 
 	/**
      * 获取项目下权限信息
      * @author Michael_xu
      * @return
-     */    
+     */
     public function authList($param)
     {
     	$user_id = $param['user_id'];
@@ -476,7 +476,7 @@ class Work extends Common
         				$ruleMap['id'] = ['eq',3];
         			}
         		}
-        	}    
+        	}
         }
         $newRuleIds = [];
         // 重新设置ruleIds，除去部分已删除或禁用的权限。
@@ -489,14 +489,14 @@ class Work extends Common
         $rulesList = $tree->list_to_tree($rules, 'id', 'pid', 'child', 0, true, array('pid'));
         //权限数组
         $authList = rulesListToArray($rulesList, $newRuleIds);
-        return $authList ? : [];  	
+        return $authList ? : [];
     }
 
 	/**
      * 任务列表统计
      * @author yykun
      * @return
-     */    
+     */
     public function classList($work_id)
     {
 		$classList = Db::name('WorkTaskClass')->where(['status' => 1,'work_id' => $work_id])->order('order_id asc')->select();
@@ -510,11 +510,11 @@ class Work extends Common
             foreach ($task_list as $kk => $vv) {
                 $allTask += 1;
                 if ($vv['status'] == 1) {
-                    $undoneTask += 1; 
+                    $undoneTask += 1;
                     continue;
                 }
                 if ($vv['status'] == 5) {
-                    $doneTask += 1; 
+                    $doneTask += 1;
                     continue;
                 }
             }
@@ -522,14 +522,14 @@ class Work extends Common
             $classList[$k]['undoneTask'] = $undoneTask ? : 0;
             $classList[$k]['doneTask'] = $doneTask ? : 0;
         }
-        return $classList ? : [];	
-    } 
+        return $classList ? : [];
+    }
 
 	/**
      * 任务标签统计
      * @author yykun
      * @return
-     */    
+     */
     public function labelList($work_id,$labelIds = array())
     {
     	if ($labelIds) {
@@ -550,17 +550,17 @@ class Work extends Common
 	                    continue;
 	                }
 	                if ($vv['status'] == 5) {
-	                    $doneTask += 1; 
+	                    $doneTask += 1;
 	                    continue;
 	                }
 	            }
 	            $labelList[$i]['allTask'] = $allTask ? : 0;
 	            $labelList[$i]['undoneTask'] = $undoneTask ? : 0;
-	            $labelList[$i]['doneTask'] = $doneTask ? : 0;                
+	            $labelList[$i]['doneTask'] = $doneTask ? : 0;
 	            $labelList[$i]['lablename'] = $labledet['name'];
 	            $i++;
 	        }
     	}
-        return $labelList ? : [];	
-    }          
+        return $labelList ? : [];
+    }
 }

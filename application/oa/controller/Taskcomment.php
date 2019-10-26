@@ -19,16 +19,16 @@ class Taskcomment extends ApiCommon
      * @permission 无限制
      * @allow 登录用户可访问
      * @other 其他根据系统设置
-    **/    
+    **/
     public function _initialize()
     {
         $action = [
             'permission'=>[''],  //不登录可访问
-            'allow'=>['index','save','delete']  //需要登录才能访问          
+            'allow'=>['index','save','delete']  //需要登录才能访问
         ];
         Hook::listen('check_auth',$action);
         $request = Request::instance();
-        $a = strtolower($request->action());        
+        $a = strtolower($request->action());
         if (!in_array($a, $action['permission'])) {
             parent::_initialize();
         }
@@ -49,7 +49,7 @@ class Taskcomment extends ApiCommon
         $param['type'] = 'task';
         $param['type_id'] = $param['task_id'];
         if ($commentModel->createData($param)) {
-            return resultArray(['data'=>$flag]);
+            return resultArray(['data'=>'添加成功']);
         } else {
             return resultArray(['error'=>$commentModel->getError()]);
         }
@@ -74,4 +74,3 @@ class Taskcomment extends ApiCommon
         }
     }
 }
- 

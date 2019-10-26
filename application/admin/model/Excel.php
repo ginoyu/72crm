@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Description: 自定义字段模块数据Excel导入导出
 // +----------------------------------------------------------------------
-// | Author: Michael_xu | gengxiaoxu@5kcrm.com 
+// | Author: Michael_xu | gengxiaoxu@5kcrm.com
 // +----------------------------------------------------------------------
 
 namespace app\admin\model;
@@ -31,7 +31,7 @@ class Excel extends Common
 			}
 		}
 		return $_indexCache[$pColumnIndex];
-	}	
+	}
 
 	/**
 	 * 自定义字段模块导入模板下载
@@ -40,10 +40,10 @@ class Excel extends Common
 	 * @author
 	 **/
 	public function excelImportDownload($field_list, $types){
-		$fieldModel = new \app\admin\model\Field();	
+		$fieldModel = new \app\admin\model\Field();
 
  		//实例化主文件
-  		$objPHPExcel = new Spreadsheet();        
+  		$objPHPExcel = new Spreadsheet();
 		$objProps = $objPHPExcel->getProperties(); // 设置excel文档的属性
 		$objProps->setCreator("5kcrm"); //创建人
 		$objProps->setLastModifiedBy("5kcrm"); //最后修改人
@@ -54,7 +54,7 @@ class Excel extends Common
 		$objProps->setCategory("5kcrm"); //种类
 		$objPHPExcel->setActiveSheetIndex(0); //设置当前的sheet
 		$objActSheet = $objPHPExcel->getActiveSheet();
-		$objActSheet->setTitle('悟空软件导入模板'.date('Y-m-d',time())); //设置sheet的标题	
+		$objActSheet->setTitle('悟空软件导入模板'.date('Y-m-d',time())); //设置sheet的标题
 
 		//存储Excel数据源到其他工作薄
 		$objPHPExcel->createSheet();
@@ -62,7 +62,7 @@ class Excel extends Common
 	    $subObject->setTitle('data');
 	    //保护数据源
 	    $subObject->getProtection()->setSheet(true);
-	    $subObject->protectCells('A1:C1000',time());		
+	    $subObject->protectCells('A1:C1000',time());
 
 		$k = 0;
         foreach ($field_list as $field) {
@@ -88,46 +88,46 @@ class Excel extends Common
 					$str_len = strlen($select_value);
 					$selectList = array();
 					if ($str_len >= 255) {
-						$str_list_arr = explode(',', $select_value);   
+						$str_list_arr = explode(',', $select_value);
 						if ($str_list_arr) {
-							foreach ($str_list_arr as $i1=>$d) {  
-						        $c = $this->stringFromColumnIndex($k).($i1+1);  
+							foreach ($str_list_arr as $i1=>$d) {
+						        $c = $this->stringFromColumnIndex($k).($i1+1);
 						        $subObject->setCellValue($c,$d);
 						        $selectList[$d]=$d;
 						    }
 							$endcell = $c;
 						}
-						for ($j=3; $j<=70; $j++) {	
-							$objActSheet->getStyle($this->stringFromColumnIndex($k).$j)->getNumberFormat()->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_TEXT);//设置单元格格式 (文本)	
+						for ($j=3; $j<=70; $j++) {
+							$objActSheet->getStyle($this->stringFromColumnIndex($k).$j)->getNumberFormat()->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_TEXT);//设置单元格格式 (文本)
 							//数据有效性   start
 							$objValidation = $objActSheet->getCell($this->stringFromColumnIndex($k).$j)->getDataValidation();
-							$objValidation -> setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST)  
-					           -> setErrorStyle(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION)  
-					           -> setAllowBlank(false)  
-					           -> setShowInputMessage(true)  
-					           -> setShowErrorMessage(true)  
-					           -> setShowDropDown(true)  
-					           -> setErrorTitle('输入的值有误')  
-					           -> setError('您输入的值不在下拉框列表内.')  
-					           -> setPromptTitle('--请选择--')  
+							$objValidation -> setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST)
+					           -> setErrorStyle(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION)
+					           -> setAllowBlank(false)
+					           -> setShowInputMessage(true)
+					           -> setShowErrorMessage(true)
+					           -> setShowDropDown(true)
+					           -> setErrorTitle('输入的值有误')
+					           -> setError('您输入的值不在下拉框列表内.')
+					           -> setPromptTitle('--请选择--')
 					           -> setFormula1('data!$'.$this->stringFromColumnIndex($k).'$1:$'.$this->stringFromColumnIndex($k).'$'.count(explode(',',$select_value)));
 					        //数据有效性  end
 					    }
 					} else {
 						if ($select_value) {
-	 						for ($j=3; $j<=70; $j++) {	
-	 							$objActSheet->getStyle($this->stringFromColumnIndex($k).$j)->getNumberFormat()->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_TEXT);//设置单元格格式 (文本)	
+	 						for ($j=3; $j<=70; $j++) {
+	 							$objActSheet->getStyle($this->stringFromColumnIndex($k).$j)->getNumberFormat()->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_TEXT);//设置单元格格式 (文本)
 								//数据有效性   start
 								$objValidation = $objActSheet->getCell($this->stringFromColumnIndex($k).$j)->getDataValidation();
-								$objValidation -> setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST)  
-						           -> setErrorStyle(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION)  
-						           -> setAllowBlank(false)  
-						           -> setShowInputMessage(true)  
-						           -> setShowErrorMessage(true)  
-						           -> setShowDropDown(true)  
-						           -> setErrorTitle('输入的值有误')  
-						           -> setError('您输入的值不在下拉框列表内.')  
-						           -> setPromptTitle('--请选择--')  
+								$objValidation -> setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST)
+						           -> setErrorStyle(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION)
+						           -> setAllowBlank(false)
+						           -> setShowInputMessage(true)
+						           -> setShowErrorMessage(true)
+						           -> setShowDropDown(true)
+						           -> setErrorTitle('输入的值有误')
+						           -> setError('您输入的值不在下拉框列表内.')
+						           -> setPromptTitle('--请选择--')
 						           -> setFormula1('"'.$select_value.'"');
 						        //数据有效性  end
 						    }
@@ -156,7 +156,7 @@ class Excel extends Common
         //设置单元格格式范围的字体、字体大小、加粗
         $objActSheet->getStyle('A1:'.$max_row.'1')->getFont()->setName("微软雅黑")->setSize(13)->getColor()->setARGB('#00000000');
         //给单元格填充背景色
-        $objActSheet->getStyle('A1:'.$max_row.'1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('#ff9900');		
+        $objActSheet->getStyle('A1:'.$max_row.'1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('#ff9900');
 
 		switch ($types) {
 			case 'crm_leads' : $types_name = '线索信息'; break;
@@ -167,7 +167,7 @@ class Excel extends Common
 			case 'crm_contract' : $types_name = '合同信息'; break;
 			case 'crm_receivables' : $types_name = '回款信息'; break;
 			default : $types_name = '悟空软件'; break;
-		}		
+		}
         $content = $types_name.'（*代表必填项）';
         $objActSheet->setCellValue('A1', $content);
 		$objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Xls');
@@ -177,7 +177,7 @@ class Excel extends Common
         header("Pragma:no-cache");
         header("Expires:0");
         $objWriter->save('php://output');
-    }		
+    }
 
 	/**
 	 * 自定义字段模块导出csv
@@ -188,14 +188,15 @@ class Excel extends Common
 	 **/
 	public function exportCsv($file_name, $field_list, $callback)
 	{
+        /** @var  Callable $callback */
 		$fieldModel = new \app\admin\model\Field();
 		ini_set('memory_limit','1024M');
 		ini_set('max_execution_time','300');
 	    // set_time_limit(0);
 
 	    //调试时，先把下面这个两个header注释即可
-	    header("Access-Control-Expose-Headers: Content-Disposition");  
-	    header("Content-type:application/vnd.ms-excel;charset=UTF-8");  
+	    header("Access-Control-Expose-Headers: Content-Disposition");
+	    header("Content-type:application/vnd.ms-excel;charset=UTF-8");
 		header("Content-Disposition:attachment;filename=" . $file_name . ".csv");
 
 		header('Expires: 0');
@@ -206,14 +207,14 @@ class Excel extends Common
 		// 加上bom头，防止用office打开时乱码
 		echo "\xEF\xBB\xBF"; 	// UTF-8 BOM
 
-		// 打开PHP文件句柄，php://output 表示直接输出到浏览器  
+		// 打开PHP文件句柄，php://output 表示直接输出到浏览器
 		$fp = fopen('php://output', 'a');
 
-		// 将中文标题转换编码，否则乱码  
-		foreach ($field_list as $i => $v) {    
-		    $title_cell[$i] = $v['name'];    
+		// 将中文标题转换编码，否则乱码
+		foreach ($field_list as $i => $v) {
+		    $title_cell[$i] = $v['name'];
 		}
-		// 将标题名称通过fputcsv写到文件句柄    
+		// 将标题名称通过fputcsv写到文件句柄
 		fputcsv($fp, $title_cell);
 	    // $export_data = $callback(0);
 	    $round = round(1000,9999);
@@ -223,20 +224,20 @@ class Excel extends Common
 	    $sheetCount = $callback(0)['dataCount'];
 		$forCount = 1000; //每次取出1000个
 		for ($i = 0; $i <= ceil(round($sheetCount/$forCount,2)); $i++){
-			$_sub = array_slice($sheetContent, ($i)*$forCount, 1000);			
+			$_sub = array_slice($sheetContent, ($i)*$forCount, 1000);
 			foreach ($_sub as $kk => $item) {
 				$rows = [];
 		    	foreach ($field_list as $rule) {
 		    		$rows[] = $fieldModel->getValueByFormtype($item[$rule['field']], $rule['form_type']);
 		    	}
-		        fputcsv($fp, $rows);				
+		        fputcsv($fp, $rows);
 			}
 			ob_flush();//清除内存
         	flush();
 		}
-	    // 将已经写到csv中的数据存储变量销毁，释放内存占用  
+	    // 将已经写到csv中的数据存储变量销毁，释放内存占用
 		//$m = memory_get_usage();
-		Cache::rm($file_name.$round); 
+		Cache::rm($file_name.$round);
         ob_flush();
         flush();
 		fclose($fp);
@@ -245,13 +246,13 @@ class Excel extends Common
 	
 	/**
 	 * 自定义字段模块数据导入(默认2000行)
-	 * @param $types 分类  
+	 * @param $types 分类
 	 * @param $file 导入文件
 	 * @param $create_user_id 创建人ID
 	 * @param $owner_user_id 负责人ID
 	 * @author Michael_xu
-	 * @return 
-	 */		
+	 * @return
+	 */
 	public function importExcel($file, $param)
 	{
 		$get_filesize_byte = get_upload_max_filesize_byte();
@@ -260,14 +261,14 @@ class Excel extends Common
 			$types = $param['types'];
 			if (!in_array($types, $this->types_arr)) {
 				$this->error = '参数错误！';
-            	return false;				
+            	return false;
 			}
 			$info = $file->validate(['size'=>$get_filesize_byte,'ext'=>'xls,xlsx,csv'])->move(FILE_PATH . 'public' . DS . 'uploads'); //验证规则
 			if (!$info) {
 				$this->error = $file->getError();
-            	return false;				
+            	return false;
 			}
-			$saveName = $info->getSaveName(); //保存路径	
+			$saveName = $info->getSaveName(); //保存路径
 			$ext = $info->getExtension(); //文件后缀
 			if (!$saveName) {
 				$this->error = '文件上传失败，请重试！';
@@ -308,7 +309,7 @@ class Excel extends Common
 	        $sheetCount = $ExcelObj->getSheet(0)->getHighestRow();
 	   		// if ($sheetCount > 2002) {
 			// $this->error = '';
-    		// return false; 	        	
+    		// return false;
 	   		// }
 			//读取表头
 	        $excelHeader = $sheetContent[1];
@@ -316,33 +317,33 @@ class Excel extends Common
 	        unset($sheetContent[1]);
 	        //取出文件的内容描述信息，循环取出数据，写入数据库
 			switch ($types) {
-				case 'crm_leads' : 
-					$dataModel = new \app\crm\model\Leads(); 
+				case 'crm_leads' :
+					$dataModel = new \app\crm\model\Leads();
 					$db = 'crm_leads';
-					$db_id = 'leads_id'; 
+					$db_id = 'leads_id';
 					break;
-				case 'crm_customer' : 
-					$dataModel = new \app\crm\model\Customer(); 
-					$db = 'crm_customer'; 
-					$db_id = 'customer_id'; 
-					$fieldParam['form_type'] = array('not in',['file','form','user','structure']); 
+				case 'crm_customer' :
+					$dataModel = new \app\crm\model\Customer();
+					$db = 'crm_customer';
+					$db_id = 'customer_id';
+					$fieldParam['form_type'] = array('not in',['file','form','user','structure']);
 					break;
-				case 'crm_contacts' : 
-					$dataModel = new \app\crm\model\Contacts(); 
-					$db = 'crm_contacts'; 
-					$db_id = 'contacts_id'; 
+				case 'crm_contacts' :
+					$dataModel = new \app\crm\model\Contacts();
+					$db = 'crm_contacts';
+					$db_id = 'contacts_id';
 					break;
-				case 'crm_product' : 
-					$dataModel = new \app\crm\model\Product(); 
-					$db = 'crm_product'; 
-					$db_id = 'product_id'; 
+				case 'crm_product' :
+					$dataModel = new \app\crm\model\Product();
+					$db = 'crm_product';
+					$db_id = 'product_id';
 					break;
 			}
-			$contactsModel = new \app\crm\model\Contacts();        
+			$contactsModel = new \app\crm\model\Contacts();
 
 	        //自定义字段
  			$fieldModel = new \app\admin\model\Field();
-        	$fieldParam['types'] = $types; 
+        	$fieldParam['types'] = $types;
         	$field_list = $fieldModel->getDataList($fieldParam);
         	$fieldArr = [];
         	$uniqueField = []; //验重字段
@@ -361,13 +362,13 @@ class Excel extends Common
 	        	foreach ($contacts_field_list as $k=>$v) {
 	        		$contactsFieldArr[$v['name']]['field'] = $v['field'];
 	        		$contactsFieldArr[$v['name']]['form_type'] = $v['form_type'];
-	        	}      		
+	        	}
         	}
 	        $defaultData = []; //默认数据
 	        $defaultData['create_user_id'] = $param['create_user_id'];
 	        $defaultData['owner_user_id'] = $param['owner_user_id'];
 	        $defaultData['create_time'] = time();
-	        $defaultData['update_time'] = time();	        
+	        $defaultData['update_time'] = time();
 	        //产品类别
 	        if ($types == 'crm_product') {
 	        	$productCategory = db('crm_product_category')->select();
@@ -380,12 +381,12 @@ class Excel extends Common
 	       	$errorMessage = [];
 			$forCount = 1000; //每次取出1000个
 			for ($i = 0; $i <= ceil(round($sheetCount/$forCount,2)); $i++){
-				$_sub = array_slice($sheetContent, ($i)*$forCount, 1000);			
+				$_sub = array_slice($sheetContent, ($i)*$forCount, 1000);
 				foreach ($_sub as $kk => $val){
 		        	$data = '';
 		        	$contactsData = '';
-		        	$k = 0;        	
-		        	$contacts_k = $field_num;        	
+		        	$k = 0;
+		        	$contacts_k = $field_num;
 		        	$resNameIds = '';
 		        	$keys++;
 		        	$name = ''; //客户、线索、联系人等名称
@@ -396,10 +397,10 @@ class Excel extends Common
 		            $resWhereNum = 0; //验重数
 		            $resContacts = false; //联系人是否有数据
 		            $resInfo = false; //Excel列是否有数据
-		            $resData = []; 
-		            $resContactsData = []; 
+		            $resData = [];
+		            $resContactsData = [];
 					foreach ($excelHeader as $aa => $header) {
-						if (empty($header)) break; 					
+						if (empty($header)) break;
 						$fieldName = trim(str_replace('*','',$header));
 						$info = '';
 						$info = $val[$k];
@@ -412,7 +413,7 @@ class Excel extends Common
 				        if ($types == 'crm_contacts' && $fieldName == '客户名称') {
 				        	if (!$info) {
 								$errorMessage[] = '第'.$keys.'行导入错误,失败原因：客户名称必填';
-								continue;			        		
+								continue;
 				        	}
 				        	$customer_id = '';
 				        	$customer_id = db('crm_customer')->where(['name' => $info])->value('customer_id');
@@ -421,9 +422,9 @@ class Excel extends Common
 								continue;
 				        	}
 				        	$data['customer_id'] = $customer_id;
-				        }				
+				        }
 						if ($aa < $field_num) {
-							if (empty($fieldArr[$fieldName]['field'])) continue; 
+							if (empty($fieldArr[$fieldName]['field'])) continue;
 							// if ($fieldArr[$fieldName]['field'] == 'name') $name = $info;
 							if (in_array($fieldArr[$fieldName]['field'], $uniqueField) && $info) {
 								if ($resWhereNum > 0) $resWhere .= " OR ";
@@ -442,11 +443,11 @@ class Excel extends Common
 								if ($contactsInfo) {
 									$resContacts = true;
 								}
-								// if ($contactsFieldArr[$fieldName]['field'] == 'name') $contactsName = $contactsInfo;	
+								// if ($contactsFieldArr[$fieldName]['field'] == 'name') $contactsName = $contactsInfo;
 								$resContactsList = [];
 								$resContactsList = $this->sheetData($contacts_k, $contactsFieldArr, $fieldName, $contactsInfo);
 								$resContactsData[] = $resContactsList['data'];
-								$contacts_k = $resContactsList['k'];	
+								$contacts_k = $resContactsList['k'];
 							}
 						}
         			}
@@ -459,23 +460,23 @@ class Excel extends Common
 					$resWhere = $resWhere ? : '';
 					// $ownerWhere['owner_user_id'] = $param['owner_user_id'];
 					if ($uniqueField && $resWhere) {
-						$resNameIds = db($db)->where($resWhere)->where($ownerWhere)->column($db_id);
+						$resNameIds = db($db)->where($resWhere)->column($db_id);
 					}
 					if ($resInfo == false) {
 						continue;
-					}				
+					}
 					if ($resNameIds && $data) {
 						if ($config == 1) {
 							$data['user_id'] = $param['create_user_id'];
 							$data['update_time'] = time();
-							//覆盖数据（以名称为查重规则，如存在则覆盖原数据）	
+							//覆盖数据（以名称为查重规则，如存在则覆盖原数据）
 							foreach ($resNameIds as $nid) {
-								$data[$db_id] = $id;
+								$data[$db_id] = $nid;
 								unset($data['owner_user_id']);
 								$upRes = $dataModel->updateDataById($data, $nid);
 								if (!$upRes) {
 									$errorMessage[] = '第'.$keys.'行导入错误,失败原因：'.$dataModel->getError();
-									continue;	
+									continue;
 								}
 								if ($types == 'crm_customer' && $resContacts !== false) {
 									$contactsData['customer_id'] = $upRes['customer_id'];
@@ -484,9 +485,9 @@ class Excel extends Common
 										$errorMessage[] = '第'.$keys.'行导入错误,失败原因：'.$contactsModel->getError();
 										continue;
 									}
-								}								
+								}
 							}
-						}					
+						}
 					} else {
 						if (!$resData = $dataModel->createData($data)) {
 							$errorMessage[] = '第'.$keys.'行导入错误,失败原因：'.$dataModel->getError();
@@ -498,16 +499,16 @@ class Excel extends Common
 							if (!$resData = $contactsModel->createData($contactsData)) {
 								$errorMessage[] = '第'.$keys.'行导入错误,失败原因：'.$contactsModel->getError();
 								continue;
-							}				
-						}											
+							}
+						}
 					}
 				}
 				// ob_flush();
     			// flush();
-        		unset($_sub);//用完及时销毁									
+        		unset($_sub);//用完及时销毁
 			}
 			unset($sheetContent);
-	        	       
+	        
 	        if ($errorMessage) {
 	        	$this->error = $errorMessage;
 	        	return false;
@@ -515,7 +516,7 @@ class Excel extends Common
 	        return true;
         } else {
 			$this->error = '请选择导入文件';
-            return false;        	
+            return false;
         }
 	}
 
@@ -523,15 +524,15 @@ class Excel extends Common
 	 * excel数据处理
 	 * @param $k 需处理数据开始下标
 	 * @author Michael_xu
-	 * @return 
-	 */	
+	 * @return
+	 */
 	public function sheetData($k = 0, $fieldArr, $fieldName, $info)
 	{
 		if ($info) {
 			if ($fieldArr[$fieldName]['form_type'] == 'address') {
 				$address = array();
 				for ($i=0; $i<4; $i++) {
-					$address[] = $val[$k];
+					$address[] = $info[$k];
 					$k++;
 				}
 				$data[$fieldArr[$fieldName]['field']] = implode(chr(10), $address);
@@ -563,20 +564,20 @@ class Excel extends Common
 				$k++;
 			} elseif ($fieldArr[$fieldName]['form_type'] == 'category') {
 				$data[$fieldArr[$fieldName]['field']] = db('crm_product_category')->where(['name' => $info])->value('category_id') ? : '';
-				$k++;	
+				$k++;
 			} elseif ($fieldArr[$fieldName]['form_type'] == 'business_type') {
 				$data[$fieldArr[$fieldName]['field']] = db('crm_business_type')->where(['name' => $info])->value('type_id') ? : '';
-				$k++;	
+				$k++;
 			} elseif ($fieldArr[$fieldName]['form_type'] == 'business_status') {
 				$data[$fieldArr[$fieldName]['field']] = db('crm_business_status')->where(['name' => $info])->value('status_id') ? : '';
-				$k++;		
-			} else {				
+				$k++;
+			} else {
 				$data[$fieldArr[$fieldName]['field']] = $info ? : '';
 				$k++;
-			}						
+			}
 		} else {
 			$data[$fieldArr[$fieldName]['field']] = '';
-			$k++;	
+			$k++;
 		}
 		$res['data'] = $data;
 		$res['k'] = $k;
@@ -601,14 +602,14 @@ class Excel extends Common
 	 * excel参数配置（备份）
 	 * @param
 	 * @author Michael_xu
-	 * @return 
-	 */	
+	 * @return
+	 */
 	public function config()
 	{
 		vendor("PHPExcel.PHPExcel.PHPExcel");
 		vendor("PHPExcel.PHPExcel.Writer.Excel5");
 		vendor("PHPExcel.PHPExcel.Writer.Excel2007");
-		vendor("PHPExcel.PHPExcel.IOFactory");	
+		vendor("PHPExcel.PHPExcel.IOFactory");
 		//实例化
 		$objPHPExcel = new \phpexcel();
 		$objWriter = new \PHPExcel_Writer_Excel5($objPHPExcel);
@@ -623,16 +624,16 @@ class Excel extends Common
 		$objProps->setKeywords("snowerp"); //关键字
 		$objProps->setCategory("snowerp"); //种类
 		$objPHPExcel->setActiveSheetIndex(0); //设置当前的sheet
-		$objActSheet = $objPHPExcel->getActiveSheet(); 
+		$objActSheet = $objPHPExcel->getActiveSheet();
 		$objActSheet->setTitle('snowerp'); //设置sheet的标题
 
 		$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(20); //设置单元格宽度
-		$objPHPExcel->getActiveSheet()->getRowDimension($i)->setRowHeight(40); //设置单元格高度
+		$objPHPExcel->getActiveSheet()->getRowDimension(1)->setRowHeight(40); //设置单元格高度
 		$objPHPExcel->getActiveSheet()->mergeCells('A18:E22'); //合并单元格
 		$objPHPExcel->getActiveSheet()->unmergeCells('A28:B28'); //拆分单元格
 
 		//设置保护cell,保护工作表
-		$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true); 
+		$objPHPExcel->getActiveSheet()->getProtection()->setSheet(true);
 		$objPHPExcel->getActiveSheet()->protectCells('A3:E13', 'PHPExcel');
 		//设置格式
 		$objPHPExcel->getActiveSheet()->getStyle('E4')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_EUR_SIMPLE);
@@ -646,7 +647,7 @@ class Excel extends Common
 		//设置字号
 		$objPHPExcel->getActiveSheet()->getDefaultStyle()->getFont()->setSize(10);
 		//设置边框
-		$objPHPExcel->getActiveSheet()->getStyle('A1:I20')->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN); 
+		$objPHPExcel->getActiveSheet()->getStyle('A1:I20')->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 		//设置边框颜色
 		$objPHPExcel->getActiveSheet()->getStyle('D13')->getBorders()->getLeft()->getColor()->setARGB('FF993300');
 		$objPHPExcel->getActiveSheet()->getStyle('D13')->getBorders()->getTop()->getColor()->setARGB('FF993300');
@@ -657,9 +658,9 @@ class Excel extends Common
 
 		//插入图像
 		$objDrawing = new PHPExcel_Worksheet_Drawing();
-		/*设置图片路径 切记：只能是本地图片*/ 
+		/*设置图片路径 切记：只能是本地图片*/
 		$objDrawing->setPath('图像地址');
-		/*设置图片高度*/ 
+		/*设置图片高度*/
 		$objDrawing->setHeight(180);//照片高度
 		$objDrawing->setWidth(150); //照片宽度
 		/*设置图片要插入的单元格*/
@@ -678,16 +679,16 @@ class Excel extends Common
 		//输入浏览器，导出Excel
 		$savename='导出Excel示例';
 		$ua = $_SERVER["HTTP_USER_AGENT"];
-		$datetime = date('Y-m-d', time());        
+		$datetime = date('Y-m-d', time());
 		if (preg_match("/MSIE/", $ua)) {
 		    $savename = urlencode($savename); //处理IE导出名称乱码
-		} 
+		}
 
-		// excel头参数  
-		header('Content-Type: application/vnd.ms-excel');  
-		header('Content-Disposition: attachment;filename="'.$savename.'.xls"');  //日期为文件名后缀  
-		header('Cache-Control: max-age=0'); 
-		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');  //excel5为xls格式，excel2007为xlsx格式  
+		// excel头参数
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="'.$savename.'.xls"');  //日期为文件名后缀
+		header('Cache-Control: max-age=0');
+		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');  //excel5为xls格式，excel2007为xlsx格式
 		$objWriter->save('php://output');
 	}
 
@@ -704,8 +705,8 @@ class Excel extends Common
 	    set_time_limit (0);
 
 	    //调试时，先把下面这个两个header注释即可
-	    header("Access-Control-Expose-Headers: Content-Disposition");  
-	    header("Content-type:application/vnd.ms-excel;charset=UTF-8");  
+	    header("Access-Control-Expose-Headers: Content-Disposition");
+	    header("Content-type:application/vnd.ms-excel;charset=UTF-8");
 		header("Content-Disposition:attachment;filename=" . $file_name . ".csv");
 
 		header('Expires: 0');
@@ -716,15 +717,16 @@ class Excel extends Common
 		// 加上bom头，防止用office打开时乱码
 		echo "\xEF\xBB\xBF"; 	// UTF-8 BOM
 
-		// 打开PHP文件句柄，php://output 表示直接输出到浏览器  
+		// 打开PHP文件句柄，php://output 表示直接输出到浏览器
 		$fp = fopen('php://output', 'a');
 
-		// 将中文标题转换编码，否则乱码  
-		foreach ($field_list as $i => $v) {    
-		    $title_cell[$i] = $v['name'];    
+		// 将中文标题转换编码，否则乱码
+		foreach ($field_list as $i => $v) {
+		    $title_cell[$i] = $v['name'];
 		}
-		// 将标题名称通过fputcsv写到文件句柄    
+		// 将标题名称通过fputcsv写到文件句柄
 		fputcsv($fp, $title_cell);
+        /** @var  Callable $callback */
 	    $export_data = $callback(0);
 		foreach ($export_data as $item) {
 			$rows = [];
@@ -738,5 +740,5 @@ class Excel extends Common
         flush();
 		fclose($fp);
 		exit();
-	}		
+	}
 }
